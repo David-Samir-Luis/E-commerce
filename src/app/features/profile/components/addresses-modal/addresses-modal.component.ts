@@ -21,7 +21,7 @@ export class AddressesModalComponent implements OnInit {
   addressForm = this.fb.group({
     name: ['', Validators.required],
     details: ['', Validators.required],
-    phone: ['', [Validators.required, Validators.pattern(/^01[125][0-9]{8}$/)]],
+    phone: ['', [Validators.required, Validators.pattern(/^01[0125][0-9]{8}$/)]],
     city: ['', Validators.required]
   })
 

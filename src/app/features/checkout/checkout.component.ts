@@ -30,7 +30,7 @@ export class CheckoutComponent {
   checkoutForm = this.fb.group({
     shippingAddress: this.fb.group({
       details: ['', [Validators.required, Validators.minLength(10)]],
-      phone: ['', [Validators.required, , Validators.pattern(/^01[125][0-9]{8}$/)]],
+      phone: ['', [Validators.required, , Validators.pattern(/^01[0125][0-9]{8}$/)]],
       city: ['', [Validators.required, Validators.minLength(2)]]
     })
   })

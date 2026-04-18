@@ -25,7 +25,7 @@ export class ProfileInformationComponent implements OnInit {
   infoForm: FormGroup = this.fb.group({
     name: ['', [Validators.required, Validators.minLength(2)]],
     email: ['', Validators.email],
-    phone: ['', Validators.pattern(/^01[125][0-9]{8}$/)],
+    phone: ['', Validators.pattern(/^01[0125][0-9]{8}$/)],
   })
 
   ngOnInit(): void {
