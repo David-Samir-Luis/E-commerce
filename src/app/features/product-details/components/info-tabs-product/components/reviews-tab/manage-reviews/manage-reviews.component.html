@@ -1,12 +1,12 @@
 <div class="px-4 py-6 border-t border-gray-200">
   @for (
-    review of showMore() ? sortedReviews() : sortedReviews().slice(0, 3);
+    review of showMore() ? reviewsList() : reviewsList().slice(0, 3);
     track review._id
   ) {
-    <app-review-item [review]="review"></app-review-item>
+    <app-review-item (hasReview)="hasReview.set($event)" [review]="review"></app-review-item>
   }
 </div>
-@if (detailedProduct().reviews.length > 3) {
+@if (reviewsList().length > 3) {
   <button
     (click)="showMore.update((v)=>!v)"
     class="flex p-3 items-center gap-2 text-sm font-medium bg-primary-50 border border-primary-500 rounded-xl text-primary-600 hover:text-primary-700 transition-colors cursor-pointer mx-auto -mt-3 mb-3"
@@ -21,8 +21,8 @@
 
 @if (isLogged()) {
   @if (iswriteReview()) {
-    <app-write-review
-      [productId]="detailedProduct().id"
+    <app-write-review 
+    (hasReview)="hasReview.set($event)"
       (iswriteReview)="iswriteReview.set($event)"
     ></app-write-review>
   } @else {

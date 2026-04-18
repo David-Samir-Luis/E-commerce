@@ -2,10 +2,10 @@
       <div class="flex text-amber-400 mr-2">
         <div class="text-yellow-400">
          @for (num of [1,2,3,4,5]; track num) {
-          @if (ratingsAverage()-num > 0) {
+          @if (ratingsAverage()-num >= 0) {
             <i class="fa-solid fa-star"></i>
           }
-          @else if (num-ratingsAverage() < 0.5) {
+          @else if (num-ratingsAverage() <= 0.5) {
             <i class="fa-solid fa-star-half-stroke"></i>
           }@else {
             <i class="fa-regular fa-star"></i>

@@ -39,7 +39,7 @@
               (click)="rating.set(num)"
               class="fa-solid fa-star cursor-pointer text-yellow-400"
             ></i>
-          } @else if (num - rating() < 0.5) {
+          } @else if (num - rating() <= 0.5) {
             <i
               (click)="rating.set(num)"
               class="fa-solid fa-star-half-stroke cursor-pointer text-yellow-400"

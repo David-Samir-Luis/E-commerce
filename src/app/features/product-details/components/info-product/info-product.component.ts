@@ -11,6 +11,7 @@ import { WishListService } from '../../../../core/services/wish-list.service';
 import { RouterLink } from "@angular/router";
 import { MystorageService } from '../../../../core/services/mystorage.service';
 import { GuestWishListService } from '../../../../core/services/guest-wish-list.service';
+import { ProductDataService } from '../../../../core/services/product-data.service';
 
 @Component({
   selector: 'app-info-product',
@@ -23,11 +24,14 @@ export class InfoProductComponent {
   private readonly authService = inject(AuthService)
   private readonly cartService = inject(CartService)
   private readonly toastrService = inject(ToastrService)
+  private readonly productDataService = inject(ProductDataService)
   private readonly wishListService = inject(WishListService)
   private readonly cartInLocalStorageService = inject(CartInLocalStorageService)
   private readonly guestWishListService = inject(GuestWishListService)
   product = input.required<IdetailedProduct>()
   value = signal<number>(1);
+  ratingsQuantity = computed(() => this.productDataService.ratingsQuantity())
+  ratingsAverage = computed(() => this.productDataService.ratingsAverage())
   isLogged = computed(() => this.authService.isLogged());
   loadingAddToCart = signal<boolean>(false);
   favoriteloading = signal<boolean>(false);

@@ -8,18 +8,20 @@ import { environment } from '../../../../../../../environments/environment';
 })
 export class ReviewsService {
   private readonly httpClient = inject(HttpClient)
-
-  createReview(productId: string,rating:number,review:string): Observable<any> {
-    return this.httpClient.post(`${environment.baseUrl}/api/v1/products/${productId}/reviews`, {
-  "review": review,
-  "rating": rating
-})
+  getReviewsForProduct(productId: string): Observable<any> {
+    return this.httpClient.get(`${environment.baseUrl}/api/v1/products/${productId}/reviews`)
   }
-  updateReview(reviewId: string, rating:number,review:string): Observable<any> {
+  createReview(productId: string, rating: number, review: string): Observable<any> {
+    return this.httpClient.post(`${environment.baseUrl}/api/v1/products/${productId}/reviews`, {
+      "review": review,
+      "rating": rating
+    })
+  }
+  updateReview(reviewId: string, rating: number, review: string): Observable<any> {
     return this.httpClient.put(`${environment.baseUrl}/api/v1/reviews/${reviewId}`, {
-  "review": review,
-  "rating": rating
-})
+      "review": review,
+      "rating": rating
+    })
   }
   deleteReview(reviewId: string): Observable<any> {
     return this.httpClient.delete(`${environment.baseUrl}/api/v1/reviews/${reviewId}`)

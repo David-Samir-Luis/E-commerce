@@ -3,7 +3,7 @@
 } @else {
   <app-nav-product [product]="product()"></app-nav-product>
   <app-info-product [product]="product()"></app-info-product>
-  <app-info-tabs-product [detailedProduct]="product()"></app-info-tabs-product>
+  <app-info-tabs-product [productId]="product()._id"></app-info-tabs-product>
   @if (product()?.category?._id) {
     <app-similar-products [categoryId]="product().category._id"> </app-similar-products>
   }

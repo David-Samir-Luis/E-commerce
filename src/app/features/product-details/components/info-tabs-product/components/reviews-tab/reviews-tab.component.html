@@ -1,20 +1,21 @@
 <div class="space-y-6">
   <div class="flex flex-col md:flex-row gap-8 items-start md:items-center">
     <div class="text-center">
-      <div class="text-5xl font-bold text-gray-900 mb-2">{{detailedProduct().ratingsAverage}}</div>
+      <div class="text-5xl font-bold text-gray-900 mb-2">{{ ratingsAverage() }}</div>
       <div class="text-yellow-400">
-        @for (num of [1,2,3,4,5]; track num) {
-          @if (detailedProduct().ratingsAverage-num > 0) {
+        @for (num of [1, 2, 3, 4, 5]; track num) {
+          @if (ratingsAverage() - num >= 0) {
             <i class="fa-solid fa-star"></i>
-          }
-          @else if (num-detailedProduct().ratingsAverage < 0.5) {
+          } @else if (num - ratingsAverage() <= 0.5) {
             <i class="fa-solid fa-star-half-stroke"></i>
-          }@else {
+          } @else {
             <i class="fa-regular fa-star"></i>
           }
-         }
+        }
       </div>
-      <p class="text-sm text-gray-500 mt-2">Based on {{detailedProduct().ratingsQuantity}} reviews</p>
+      <p class="text-sm text-gray-500 mt-2">
+        Based on {{ reviewsList().length}} reviews
+      </p>
     </div>
     <div class="flex-1 w-full">
       <div class="flex items-center gap-3 mb-2">
@@ -23,40 +24,39 @@
           <div
             class="h-full bg-yellow-400 rounded-full transition-all duration-300"
             [style.width]="`${star5()}%`"
-
           ></div>
         </div>
-        <span class="text-sm text-gray-500 w-10">{{star5()}}%</span>
+        <span class="text-sm text-gray-500 w-10">{{ star5() }}%</span>
       </div>
       <div class="flex items-center gap-3 mb-2">
         <span class="text-sm text-gray-600 w-8">4 star</span>
         <div class="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
           <div
             class="h-full bg-yellow-400 rounded-full transition-all duration-300"
-             [style.width]="`${star4()}%`"
+            [style.width]="`${star4()}%`"
           ></div>
         </div>
-        <span class="text-sm text-gray-500 w-10">{{star4()}}%</span>
+        <span class="text-sm text-gray-500 w-10">{{ star4() }}%</span>
       </div>
       <div class="flex items-center gap-3 mb-2">
         <span class="text-sm text-gray-600 w-8">3 star</span>
         <div class="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
           <div
             class="h-full bg-yellow-400 rounded-full transition-all duration-300"
-             [style.width]="`${star3()}%`"
+            [style.width]="`${star3()}%`"
           ></div>
         </div>
-        <span class="text-sm text-gray-500 w-10">{{star3()}}%</span>
+        <span class="text-sm text-gray-500 w-10">{{ star3() }}%</span>
       </div>
       <div class="flex items-center gap-3 mb-2">
         <span class="text-sm text-gray-600 w-8">2 star</span>
         <div class="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
           <div
             class="h-full bg-yellow-400 rounded-full transition-all duration-300"
-             [style.width]="`${star2()}%`"
+            [style.width]="`${star2()}%`"
           ></div>
         </div>
-        <span class="text-sm text-gray-500 w-10">{{star2()}}%</span>
+        <span class="text-sm text-gray-500 w-10">{{ star2() }}%</span>
       </div>
       <div class="flex items-center gap-3 mb-2">
         <span class="text-sm text-gray-600 w-8">1 star</span>
@@ -66,11 +66,10 @@
             [style.width]="`${star1()}%`"
           ></div>
         </div>
-        <span class="text-sm text-gray-500 w-10">{{star1()}}%</span>
+        <span class="text-sm text-gray-500 w-10">{{ star1() }}%</span>
       </div>
     </div>
   </div>
 
-  <app-manage-reviews [detailedProduct]="detailedProduct()"></app-manage-reviews>
-  
+  <app-manage-reviews [reviewsList]="reviewsList()"></app-manage-reviews>
 </div>

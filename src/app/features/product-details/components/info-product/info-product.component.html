@@ -52,8 +52,8 @@
             {{ product().title }}
           </h1>
           <app-stars-product
-            [ratingsAverage]="product()!.ratingsAverage"
-            [ratingsQuantity]="product()!.ratingsQuantity"
+            [ratingsAverage]="ratingsAverage()"
+            [ratingsQuantity]="ratingsQuantity()"
             [reviews]="' reviews'"
           ></app-stars-product>
           <div class="flex items-center flex-wrap gap-3 mb-6">

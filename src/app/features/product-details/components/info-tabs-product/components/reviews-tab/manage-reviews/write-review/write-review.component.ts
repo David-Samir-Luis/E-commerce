@@ -3,7 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { ReviewsService } from '../../reviews.service';
 import { ToastrService } from 'ngx-toastr';
 import { MystorageService } from '../../../../../../../../core/services/mystorage.service';
-import { CommunicationService } from '../../../../../../../../core/services/communication.service';
+import { ProductDataService } from '../../../../../../../../core/services/product-data.service';
 
 @Component({
   selector: 'app-write-review',
@@ -15,9 +15,10 @@ export class WriteReviewComponent implements OnInit {
   private readonly reviewsService = inject(ReviewsService)
   private readonly toastrService = inject(ToastrService)
   private readonly mystorageService = inject(MystorageService)
-  private readonly communicationService = inject(CommunicationService)
+  private readonly productDataService = inject(ProductDataService)
   iswriteReview = output<boolean>()
-  productId = input.required<string>()
+  hasReview=output<boolean>()
+  productId = signal<string>(this.productDataService.productId())
   review = input<Ireview>()
   rating = signal<number>(0)
   user = signal<Iuser>({} as Iuser)
@@ -49,16 +50,19 @@ export class WriteReviewComponent implements OnInit {
     if (this.loading()) return
     this.iswriteReview.emit(false)
   }
+
   createReview() {
     this.loading.set(true)
-
     this.reviewsService.createReview(this.productId(), this.rating(), this.reviewText()).subscribe({
       next: res => {
+        this.hasReview.emit(true)
+        this.iswriteReview.emit(false)
         this.toastrService.success('Your review submitted sucessfully')
         this.loading.set(false)
         this.rating.set(0)
         this.reviewText.set('')
-        this.communicationService.reCallGetSpecificProductData()
+        this.productDataService.reCallGetReviewsForProduct()
+        
       },
       error: err => {
         this.loading.set(false)
@@ -74,7 +78,7 @@ export class WriteReviewComponent implements OnInit {
         this.toastrService.success('Your review Updated sucessfully')
         this.loading.set(false)
         this.iswriteReview.emit(false)
-        this.communicationService.reCallGetSpecificProductData()
+        this.productDataService.reCallGetReviewsForProduct()
       },
       error: err => {
         this.loading.set(false)

@@ -2,7 +2,6 @@
   <app-write-review
     (iswriteReview)="edit.set($event)"
     [review]="review()"
-    [productId]="review().product"
   ></app-write-review>
 } @else {
   <div class="bg-white border border-gray-100 rounded-xl p-4 space-y-3 mt-3">
@@ -57,9 +56,9 @@
     </div>
     <div class="flex gap-0.5 pt-1 text-yellow-400">
       @for (num of [1, 2, 3, 4, 5]; track num) {
-        @if (review().rating - num > 0) {
+        @if (review().rating - num >= 0) {
           <i class="fa-solid fa-star"></i>
-        } @else if (num - review().rating < 0.5) {
+        } @else if (num - review().rating <= 0.5) {
           <i class="fa-solid fa-star-half-stroke"></i>
         } @else {
           <i class="fa-regular fa-star"></i>
