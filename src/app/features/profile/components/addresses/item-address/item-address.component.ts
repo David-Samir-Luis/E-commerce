@@ -1,5 +1,6 @@
-import { Component, inject, input, output, signal } from '@angular/core';
+import { Component, effect, inject, input, output, signal } from '@angular/core';
 import { AddressesService } from '../addresses.service';
+import { AddressTriggerService } from '../../../address-trigger.service';
 
 @Component({
   selector: 'app-item-address',
@@ -9,6 +10,7 @@ import { AddressesService } from '../addresses.service';
 })
 export class ItemAddressComponent {
   private readonly addressesService = inject(AddressesService)
+  private readonly AddressTriggerService = inject(AddressTriggerService)
   address = input.required<Iaddress>()
   addressesList = output<Iaddress[]>()
   AddressToUpdate = output<Iaddress>()
@@ -16,12 +18,23 @@ export class ItemAddressComponent {
   isModalAdd = output<boolean>()
   loadingDelete = signal<boolean>(false)
 
+  constructor(){
+    effect(()=>{
+      if (this.AddressTriggerService.addId()===this.address()._id) {
+        this.deleteAction()
+      }
+    })
+  }
 
   deleteAddress() {
     if (this.loadingDelete()) return;
 
     this.loadingDelete.set(true)
-    this.addressesService.removeAddress(this.address()._id).subscribe({
+   this.deleteAction()
+  }
+
+deleteAction(){
+   this.addressesService.removeAddress(this.address()._id).subscribe({
       next: res => {
         this.loadingDelete.set(false)
         this.addressesList.emit(res.data)
@@ -30,9 +43,7 @@ export class ItemAddressComponent {
         this.loadingDelete.set(false)
       }
     })
-  }
-
-
+}
   editAddress(){
     if (this.loadingDelete()) return
     this.AddressToUpdate.emit(this.address())

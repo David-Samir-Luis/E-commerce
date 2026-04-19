@@ -1,6 +1,7 @@
 import { Component, inject, input, OnInit, output, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AddressesService } from '../addresses/addresses.service';
+import { AddressTriggerService } from '../../address-trigger.service';
 
 @Component({
   selector: 'app-addresses-modal',
@@ -17,6 +18,7 @@ export class AddressesModalComponent implements OnInit {
   AddressToUpdate = input.required<Iaddress>()
   private readonly fb = inject(FormBuilder)
   private readonly addressesService = inject(AddressesService)
+  private readonly addressTriggerService = inject(AddressTriggerService)
 
   addressForm = this.fb.group({
     name: ['', Validators.required],
@@ -61,8 +63,12 @@ export class AddressesModalComponent implements OnInit {
     this.addressesService.addAddress(data).subscribe({
       next: (res) => {
         this.loading.set(false)
-        this.AddressesList.emit(res.data)
         this.openModal.emit(false)
+        if (this.isModalAdd()) {
+          this.AddressesList.emit(res.data)
+        }else{
+          this.addressTriggerService.callDeleteAddress(this.AddressToUpdate()._id)
+        }
       },
       error: (err) => {
         this.loading.set(false)
