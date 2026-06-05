@@ -20,8 +20,9 @@
               fill="currentColor"
               d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376C296.3 401.1 253.9 416 208 416 93.1 416 0 322.9 0 208S93.1 0 208 0 416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z"
             ></path></svg
-          ><input (ngModelChange)="searchValue.set($event);minMaxSort('q',$event)"
-                [ngModel]="searchValue()"
+          ><input
+            (ngModelChange)="searchValue.set($event); minMaxSort('q', $event)"
+            [ngModel]="searchValue()"
             type="text"
             placeholder="Search for products..."
             class="w-full pl-12 pr-4 py-3 rounded-xl border border-gray-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 outline-none transition-all text-lg"
@@ -245,10 +246,11 @@
                 </svg>
               </button>
             </div>
-
-            <div class="ms-3 text-sm text-gray-500">
-              {{ productsList().length }} result out of {{ total() }}
-            </div>
+            @if (searchValue() === '') {
+              <div class="ms-3 text-sm text-gray-500">
+                {{ productsList().length }} result out of {{ total() }}
+              </div>
+            }
           </div>
           <div class="flex items-center gap-2">
             <span class="text-sm text-gray-500">Sort by:</span
@@ -266,7 +268,7 @@
             </select>
           </div>
         </div>
-        @if (searchValue() ||searchedinfo().length||displaymin() || displaymax() ) {
+        @if (searchValue() || searchedinfo().length || displaymin() || displaymax()) {
           <div class="mb-6 flex items-center gap-2 flex-wrap">
             <span class="text-sm text-gray-500 flex items-center gap-1"
               ><svg
@@ -286,7 +288,10 @@
             @if (searchValue()) {
               <span
                 class="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-gray-100 text-gray-700 text-xs"
-                >"{{searchValue()}}"<button (click)="minMaxSort('q','')" class="hover:text-red-500">
+                >"{{ searchValue() }}"<button
+                  (click)="minMaxSort('q', '')"
+                  class="hover:text-red-500"
+                >
                   <svg
                     data-prefix="fas"
                     data-icon="xmark"
@@ -308,7 +313,7 @@
                 class="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-primary-100 text-xs"
                 >{{ item.name }}
                 <button
-                  (click)="checkboxSearch(item.key,item.value,false)"
+                  (click)="checkboxSearch(item.key, item.value, false)"
                   class="hover:text-red-500"
                 >
                   <svg
@@ -368,6 +373,7 @@
           >
             @for (
               product of productsList()
+                | searchProduct: searchValue()
                 | paginate
                   : {
                       id: 'products',

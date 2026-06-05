@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, PLATFORM_ID, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, PLATFORM_ID, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProductsService } from '../../core/services/products.service';
 import { CategoriesService } from '../../core/services/categories.service';
@@ -13,11 +13,13 @@ import { EmptyProductsComponent } from "../shop/empty-products/empty-products.co
 import { FormsModule } from '@angular/forms';
 import { FlowbiteService } from '../../core/services/flowbite.service';
 import { initFlowbite } from 'flowbite';
+import { HttpParams } from '@angular/common/http';
+import { SearchProductPipe } from '../../shared/pipes/search-product-pipe';
 
 
 @Component({
   selector: 'app-search',
-  imports: [NgxPaginationModule, ItemProductComponent, LoadingPageComponent, EmptyProductsComponent, FormsModule],
+  imports: [NgxPaginationModule, ItemProductComponent, LoadingPageComponent, EmptyProductsComponent, FormsModule,SearchProductPipe],
   templateUrl: './search.component.html',
   styleUrl: './search.component.css',
 })
@@ -28,7 +30,7 @@ export class SearchComponent implements OnInit {
   private readonly brandService = inject(BrandService)
   private readonly pLATFORM_ID = inject(PLATFORM_ID)
   private readonly router = inject(Router)
-    constructor(private flowbiteService: FlowbiteService) { }
+  constructor(private flowbiteService: FlowbiteService) { }
 
   sub = new Subscription();
   productsList = signal<Iproduct[]>([])
@@ -43,6 +45,7 @@ export class SearchComponent implements OnInit {
   max = signal<number>(0);
   sortBy = signal<string>('');
   searchValue = signal<string>('');
+  limit = computed<number>(() => this.searchValue() === '' ? 12 : 50);
   displaymin = signal<number>(0);
   displaymax = signal<number>(0);
   loadingProducts = signal<boolean>(false);
@@ -58,7 +61,7 @@ export class SearchComponent implements OnInit {
         const minNum = queryParams.get('price[lte]')
         const maxNum = queryParams.get('price[gte]')
         const sort = queryParams.get('sort')
-        const q = queryParams.get('q')
+        const qq = queryParams.get('q')
 
         this.min.set(minNum === null ? 0 : +minNum)
         this.max.set(maxNum === null ? 0 : +maxNum)
@@ -66,8 +69,12 @@ export class SearchComponent implements OnInit {
         this.displaymax.set(this.max())
 
         this.sortBy.set(sort ?? '')
-        this.searchValue.set(q ?? '')
-        this.getSearchResults(this.router.url.split('?')[1] ?? '')
+        this.searchValue.set(qq ?? '')
+
+        const { q, ...rest } = this.activatedRoute.snapshot.queryParams;
+        const url = new HttpParams({ fromObject: rest }).toString();
+        this.getSearchResults(url ?? '')
+        // this.getSearchResults(this.router.url.split('?')[1] ?? '')
       }
     )
   }
@@ -77,12 +84,17 @@ export class SearchComponent implements OnInit {
   getSearchResults(queryParams: string) {
     this.loadingProducts.set(true)
     this.sub.unsubscribe()
-    this.sub = this.productsService.searchProducts(queryParams).subscribe({
+    this.sub = this.productsService.searchProducts(queryParams,this.limit()).subscribe({
       next: res => {
         this.productsList.set(res.data)
         this.pageSize.set(res.metadata.limit)
         this.cp.set(res.metadata.currentPage)
-        this.total.set(res.results)
+        if (this.searchValue()==='') {
+          this.total.set(res.results)
+        }else{
+          this.total.set(50)
+        }
+        
         this.loadingProducts.set(false)
 
       },
@@ -182,7 +194,7 @@ export class SearchComponent implements OnInit {
 
   //'sort'|'price[lte]'|'price[gte]'
 
-  minMaxSort(type: 'sort' | 'minPrice' | 'maxPrice'|'q', value: string | number) {
+  minMaxSort(type: 'sort' | 'minPrice' | 'maxPrice' | 'q', value: string | number) {
 
     let key: string = type;
 

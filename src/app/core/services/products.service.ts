@@ -27,7 +27,7 @@ export class ProductsService {
   }
 
 
-  searchProducts(queryParams:string):Observable<any>{
-    return this.httpClient.get(`${environment.baseUrl}/api/v1/products?${queryParams}&limit=12`)
+  searchProducts(queryParams:string,limit:number=12):Observable<any>{
+    return this.httpClient.get(`${environment.baseUrl}/api/v1/products?${queryParams}&limit=${limit}`)
   }
 }
