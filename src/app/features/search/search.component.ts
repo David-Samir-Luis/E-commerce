@@ -58,8 +58,8 @@ export class SearchComponent implements OnInit {
     this.activatedRoute.queryParamMap.subscribe(
       (queryParams) => {
 
-        const minNum = queryParams.get('price[lte]')
-        const maxNum = queryParams.get('price[gte]')
+        const minNum = queryParams.get('price[gte]')
+        const maxNum = queryParams.get('price[lte]')
         const sort = queryParams.get('sort')
         const qq = queryParams.get('q')
 
@@ -198,8 +198,8 @@ export class SearchComponent implements OnInit {
 
     let key: string = type;
 
-    if (type === 'minPrice') { key = 'price[lte]' }
-    else if (type === 'maxPrice') { key = 'price[gte]' }
+    if (type === 'minPrice') { key = 'price[gte]' }
+    else if (type === 'maxPrice') { key = 'price[lte]' }
 
     this.router.navigate([], {
       queryParams: { [key]: value === 0 || value === '' ? null : value, page: null },
